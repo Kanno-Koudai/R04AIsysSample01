@@ -9,28 +9,30 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
-public class Json05 {
+public class Sentiment {
 
 	public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
-		Language message = getLanguage("Stepover Toehold With Facelock");
+		SLanguage message = getLanguage("Stepover Toehold With Facelock");
 		if (message != null) {
-			System.out.println(message.documents[0].detectedLanguage.name);
+			System.out.println("negative"+message.documents[0].confidenceScores.negative);
+			System.out.println("neutral"+message.documents[0].confidenceScores.neutral);
+			System.out.println("positive"+message.documents[0].confidenceScores.positive);
 		}
 	}
 
-	static Language getLanguage(String s) throws IOException, URISyntaxException, InterruptedException {
+	static SLanguage getLanguage(String s) throws IOException, URISyntaxException, InterruptedException {
 		Gson gson = new Gson();
 
-		String url = "https://r04jk3a06-text.cognitiveservices.azure.com//" + "text/analytics/v3.0/languages";
+		String url = "https://r04jk3a06-text.cognitiveservices.azure.com//" + "text/analytics/v3.0/sentiment";
 		Map<String, String> map = new HashMap<>();
 		map.put("Ocp-Apim-Subscription-Key", "a2328e94b11644d59e7a4392b2cfc70e");
 
-		Docs doc = new Docs();
+		SDocs doc = new SDocs();
 		doc.id = "1";
 		doc.text = s;
 
-		Source src = new Source();
-		src.documents = new Docs[1];
+		SSource src = new SSource();
+		src.documents = new SDocs[1];
 		src.documents[0] = doc;
 
 		String jsonData = new Gson().toJson(src);
@@ -38,9 +40,9 @@ public class Json05 {
 		InetSocketAddress proxy = new InetSocketAddress("172.17.0.2", 80);
 
 		JsonReader reader = WebApiConnector.postJsonReader(url, proxy, map, jsonData);
-		Language message = null;
+		SLanguage message = null;
 		if (reader != null) {
-			message = gson.fromJson(reader, Language.class);
+			message = gson.fromJson(reader, SLanguage.class);
 			reader.close();
 		}
 		return message;
@@ -48,25 +50,27 @@ public class Json05 {
 
 }
 
-class Language {
-	Documents[] documents;
+class SLanguage {
+	SDocuments[] documents;
 	String[] errors;
 	String modelVersion;
 }
 
-class Documents {
-	DetectedLanguage detectedLanguage;
+class SDocuments {
+	ConfidenceScores confidenceScores;
 }
 
-class DetectedLanguage {
-	String name;
+class ConfidenceScores {
+	double negative;
+	double neutral;
+	double positive;
 }
 
-class Source {
-	Docs[] documents;
+class SSource {
+	SDocs[] documents;
 }
 
-class Docs {
+class SDocs {
 	String id;
 	String text;
 }
