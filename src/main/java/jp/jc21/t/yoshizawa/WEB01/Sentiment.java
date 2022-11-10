@@ -6,6 +6,10 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
@@ -37,9 +41,10 @@ public class Sentiment {
 
 		String jsonData = new Gson().toJson(src);
 
-		InetSocketAddress proxy = new InetSocketAddress("172.17.0.2", 80);
+		//InetSocketAddress proxy = new InetSocketAddress("172.17.0.2", 80);
 
-		JsonReader reader = WebApiConnector.postJsonReader(url, proxy, map, jsonData);
+		//JsonReader reader = WebApiConnector.postJsonReader(url, proxy, map, jsonData);
+		JsonReader reader = WebApiConnector.postJsonReader(url, map, jsonData);
 		SLanguage message = null;
 		if (reader != null) {
 			message = gson.fromJson(reader, SLanguage.class);
@@ -73,4 +78,5 @@ class SSource {
 class SDocs {
 	String id;
 	String text;
+
 }

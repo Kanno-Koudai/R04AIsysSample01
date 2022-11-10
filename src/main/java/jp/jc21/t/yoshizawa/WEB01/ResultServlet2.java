@@ -10,16 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * SServlet implementation class ResultServlet
+ * Sentiment implementation class ResultServlet
  */
-@WebServlet("/result")
-public class ResultServlet extends HttpServlet {
+@WebServlet("/result2")
+public class ResultServlet2 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public ResultServlet() {
+	public ResultServlet2() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -30,12 +30,20 @@ public class ResultServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String string = "生姜焼定食";
+		String string = "Stepover Toehold With Facelock";
 		try {
-			Language result = Json05.getLanguage(string);
-			String message = result.documents[0].detectedLanguage.name;
+			SLanguage result = Sentiment.getLanguage(string);
+			ConfidenceScores message = result.documents[0].confidenceScores;
+			double negative =message.negative; 
+			double neutral =message.neutral; 
+			double positive =message.positive;
+			
+         	request.setAttribute("negative", negative);
+			request.setAttribute("neutral", neutral);
+			request.setAttribute("positive", positive);
+			
 			request.setAttribute("message", message);
-			request.getRequestDispatcher("/WEB-INF/result.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/jsp/result2.jsp").forward(request, response);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
@@ -54,10 +62,18 @@ public class ResultServlet extends HttpServlet {
 		request.setAttribute("string", string);
 
 		try {
-			Language result = Json05.getLanguage(string);
-			String message = result.documents[0].detectedLanguage.name;
+			SLanguage result = Sentiment.getLanguage(string);
+			ConfidenceScores message = result.documents[0].confidenceScores;
+			double negative =message.negative; 
+			double neutral =message.neutral; 
+			double positive =message.positive;
+			
+         	request.setAttribute("negative", negative);
+			request.setAttribute("neutral", neutral);
+			request.setAttribute("positive", positive);
+			
 			request.setAttribute("message", message);
-			request.getRequestDispatcher("/WEB-INF/jsp/result.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/jsp/result2.jsp").forward(request, response);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
